@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Methodik & Quellen – Fuel Rechner</title>
+  <meta name="description" content="Detaillierte Erklärung der Berechnungsmethodik des Fuel Rechners. ACSM-Gleichung, Crossover-Konzept, Glykogenschätzung und mehr.">
+  <meta name="theme-color" content="#08090d">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="layout">
+
+    <!-- ===== Sidebar ===== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-logo">⚡</span>
+        <span class="sidebar-title">Fuel Rechner</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="index.html" class="nav-item" data-page="index.html"><span class="nav-icon">🧮</span><span class="nav-label">Rechner</span></a>
+        <a href="methodik.html" class="nav-item" data-page="methodik.html"><span class="nav-icon">📐</span><span class="nav-label">Methodik</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="impressum.html" class="nav-item" data-page="impressum.html"><span class="nav-icon">📋</span><span class="nav-label">Impressum</span></a>
+        <button class="theme-btn" id="themeToggle">
+          <span class="nav-icon"><svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg><svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+          <span class="nav-label" id="themeLabel">Hellmodus</span>
+        </button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ===== Main Content ===== -->
+    <div class="main-wrapper">
+      <div class="topbar">
+        <button class="hamburger" id="menuToggle" aria-label="Menü"><span></span><span></span><span></span></button>
+        <span class="topbar-title">Methodik</span>
+      </div>
+
+      <div class="app app-article">
+        <header class="header">
+          <div class="header-icon">📐</div>
+          <h1>Methodik</h1>
+          <p class="subtitle">So berechnet der Fuel Rechner deinen Carb-Bedarf</p>
+        </header>
+
+        <main class="article">
+
+          <!-- ===== Table of Contents ===== -->
+          <nav class="toc">
+            <h2>Inhalt</h2>
+            <ol>
+              <li><a href="#energy">Energieverbrauch beim Laufen</a></li>
+              <li><a href="#elevation">Berücksichtigung von Höhenmetern</a></li>
+              <li><a href="#intensity">Intensitätsberechnung</a></li>
+              <li><a href="#crossover">Substratverteilung (Crossover-Konzept)</a></li>
+              <li><a href="#vo2max">Anpassung für Trainingszustand</a></li>
+              <li><a href="#gender">Anpassung für Geschlecht</a></li>
+              <li><a href="#glycogen">Glykogenspeicher-Schätzung</a></li>
+              <li><a href="#deficit">Berechnung des Carb-Defizits</a></li>
+              <li><a href="#osmolarity">Mischverhältnis &amp; Osmolarität</a></li>
+              <li><a href="#sources">Quellenverzeichnis</a></li>
+            </ol>
+          </nav>
+
+          <!-- ===== 1. Energieverbrauch ===== -->
+          <section id="energy" class="article-section">
+            <h2>1. Energieverbrauch beim Laufen</h2>
+
+            <p>
+              Zur Schätzung des Energieverbrauchs verwenden wir die metabolische Gleichung des
+              <strong>American College of Sports Medicine (ACSM)</strong> für das Laufen.<a href="#src-1" class="ref">[1]</a>
+              Diese Gleichung schätzt den Sauerstoffverbrauch (VO₂) basierend auf der Laufgeschwindigkeit
+              und der Geländesteigung.
+            </p>
+
+            <div class="formula">VO₂ = 3.5 + 0.18 × v + 0.9 × v × G</div>
+            <div class="formula-legend">
+              <span><strong>VO₂</strong> = Sauerstoffverbrauch (ml/kg/min)</span>
+              <span><strong>v</strong> = Geschwindigkeit (m/min) = 1000 / Pace (min/km)</span>
+              <span><strong>G</strong> = Steigung als Dezimalzahl (z.B. 0.05 für 5 %)</span>
+              <span><strong>3.5</strong> = Ruhe-VO₂ (entspricht 1 MET)</span>
+            </div>
+
+            <p>
+              Der Term <code>0.18 × v</code> beschreibt die horizontale Komponente des Laufens. Wir nutzen hier einen für Ausdauersportler optimierten Koeffizienten von 0.18 (statt des klinischen Standardwerts 0.20), um die tatsächliche Laufökonomie besser abzubilden, Überlastungskalorien zu vermeiden und eine präzise Übereinstimmung mit Sportuhren wie Garmin Connect zu erreichen.
+              Der Term <code>0.9 × v × G</code> beschreibt die vertikale Komponente (Bergauflaufen).
+              Bei flachem Gelände (G = 0) entfällt der vertikale Term.
+            </p>
+
+            <p>
+              Der Kalorienverbrauch setzt sich aus dem <strong>Ruheumsatz (RMR)</strong> und dem <strong>aktiven Leistungsumsatz</strong> beim Laufen zusammen. Dies ermöglicht eine hochgradig personalisierte Berechnung:
+            </p>
+
+            <h3>1. Ruheumsatz (RMR) nach Mifflin-St Jeor</h3>
+            <p>
+              Für den Ruheumsatz nutzen wir die etablierte Mifflin-St Jeor-Formel, die Alter, Geschlecht, Größe und Gewicht berücksichtigt:
+            </p>
+            <div class="formula">
+              Männer: RMR (kcal/Tag) = 10 × Gewicht (kg) + 6.25 × Größe (cm) − 5 × Alter (Jahre) + 5<br>
+              Frauen: RMR (kcal/Tag) = 10 × Gewicht (kg) + 6.25 × Größe (cm) − 5 × Alter (Jahre) − 161
+            </div>
+            <div class="formula">kcal/min<sub>Ruhe</sub> = RMR (kcal/Tag) / 1440</div>
+
+            <h3>2. Aktiver Leistungsumsatz</h3>
+            <p>
+              Der Nettosauerstoffbedarf des Laufens (ohne Ruhe-VO₂ von 3.5 ml/kg/min) wird in Energie umgerechnet:
+            </p>
+            <div class="formula">VO₂<sub>aktiv</sub> = 0.18 × v + 0.9 × v × G</div>
+            <div class="formula">kcal/min<sub>aktiv</sub> = (VO₂<sub>aktiv</sub> × Körpergewicht) / 200</div>
+
+            <h3>3. Gesamtkalorienverbrauch</h3>
+            <div class="formula">kcal/min<sub>gesamt</sub> = kcal/min<sub>aktiv</sub> + kcal/min<sub>Ruhe</sub></div>
+
+            <p>
+              Der Gesamtverbrauch ergibt sich dann aus Kalorienrate × Laufdauer:
+            </p>
+
+            <div class="formula">Gesamt-kcal = kcal/min × Distanz × Pace</div>
+
+            <div class="example">
+              <div class="example-title">Beispiel</div>
+              <p>Läufer: 75 kg, Pace 5:00/km, Distanz 21.1 km, flach</p>
+              <p>v = 1000 / 5 = 200 m/min</p>
+              <p>VO₂ = 3.5 + 0.18 × 200 = 39.5 ml/kg/min</p>
+              <p>kcal/min = (39.5 × 75) / 200 = <strong>14.8 kcal/min</strong></p>
+              <p>Dauer = 21.1 × 5 = 105.5 min</p>
+              <p>Gesamt = 14.8 × 105.5 ≈ <strong>1563 kcal</strong></p>
+            </div>
+          </section>
+
+          <!-- ===== 2. Höhenmeter ===== -->
+          <section id="elevation" class="article-section">
+            <h2>2. Berücksichtigung von Höhenmetern</h2>
+
+            <p>
+              Wenn Höhenmeter angegeben werden, berechnen wir die durchschnittliche Steigung und
+              fügen sie in die ACSM-Gleichung ein. Dies erhöht den VO₂-Wert und damit den
+              Gesamtkalorienverbrauch signifikant.
+            </p>
+
+            <div class="formula">G = Höhenmeter / (Distanz × 1000)</div>
+            <div class="formula-legend">
+              <span><strong>G</strong> = Durchschnittliche Steigung als Dezimalzahl</span>
+              <span><strong>Höhenmeter</strong> = Gesamtanstieg in Metern</span>
+              <span><strong>Distanz</strong> = Laufstrecke in km</span>
+            </div>
+
+            <p>
+              Dies ist eine Vereinfachung, die eine konstante Steigung annimmt. In der Realität
+              wechseln sich Anstiege und Flachstücke ab, aber der Durchschnitt liefert eine brauchbare
+              Schätzung für den Mehrverbrauch.
+            </p>
+
+            <div class="example">
+              <div class="example-title">Beispiel</div>
+              <p>Halbmarathon mit 500 hm: G = 500 / 21100 = 0.0237 (2.4 %)</p>
+              <p>Zusätzlicher VO₂: 0.9 × 200 × 0.0237 = +4.3 ml/kg/min</p>
+              <p>Das entspricht ca. <strong>+10 % Mehrverbrauch</strong> gegenüber flach.</p>
+            </div>
+
+            <div class="callout">
+              ⚠️ Die ACSM-Gleichung gilt primär für Bergauflaufen. Bergablaufen hat einen anderen
+              energetischen Aufwand (exzentrische Muskelarbeit), der hier nicht separat modelliert wird.
+            </div>
+          </section>
+
+          <!-- ===== 3. Intensität ===== -->
+          <section id="intensity" class="article-section">
+            <h2>3. Intensitätsberechnung</h2>
+
+            <p>
+              Die Intensität eines Laufes wird als Verhältnis der Laufgeschwindigkeit zur
+              Schwellengeschwindigkeit (Laktatschwelle) berechnet. Die Laktatschwelle ist die
+              Intensität, ab der die Laktatproduktion die Laktatelimination übersteigt – ein
+              zentraler Marker der Ausdauerleistungsfähigkeit.
+            </p>
+
+            <div class="formula">Intensität = Schwellenpace / Zielpace</div>
+            <div class="formula-legend">
+              <span>Pace in min/km → schnellere Pace = kleinerer Wert</span>
+              <span>Ergebnis &lt; 1.0 → langsamer als Schwelle</span>
+              <span>Ergebnis = 1.0 → Schwellentempo</span>
+              <span>Ergebnis &gt; 1.0 → schneller als Schwelle</span>
+            </div>
+
+            <p>
+              Da der Pace-Wert invers zur Geschwindigkeit ist (höherer Pace = langsamer), ergibt die
+              Division Schwellenpace / Zielpace direkt das Geschwindigkeitsverhältnis. Der Wert wird
+              auf den Bereich <strong>0.4 – 1.3</strong> begrenzt.
+            </p>
+
+            <p>
+              Aus dem Intensitätsverhältnis leiten wir die Trainingszone ab:
+            </p>
+
+            <table class="article-table">
+              <thead>
+                <tr><th>Intensität</th><th>Zone</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>&lt; 65 %</td><td>Regeneration</td></tr>
+                <tr><td>65 – 75 %</td><td>Grundlagenausdauer 1 (GA1)</td></tr>
+                <tr><td>75 – 85 %</td><td>Grundlagenausdauer 2 (GA2)</td></tr>
+                <tr><td>85 – 95 %</td><td>Tempobereich</td></tr>
+                <tr><td>95 – 100 %</td><td>Schwellenbereich</td></tr>
+                <tr><td>&gt; 100 %</td><td>Überschwellig</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- ===== 4. Crossover-Konzept ===== -->
+          <section id="crossover" class="article-section">
+            <h2>4. Substratverteilung (Crossover-Konzept)</h2>
+
+            <p>
+              Das <strong>Crossover-Konzept</strong> nach Brooks &amp; Mercier (1994)<a href="#src-2" class="ref">[2]</a>
+              beschreibt, wie der Körper bei steigender Belastungsintensität zunehmend von der
+              Fettoxidation zur Kohlenhydratoxidation wechselt. Der „Crossover-Point" ist die
+              Intensität, ab der Kohlenhydrate den dominanten Brennstoff darstellen.
+            </p>
+
+            <p>
+              Frühe Arbeiten von Romijn et al. (1993)<a href="#src-3" class="ref">[3]</a> quantifizierten
+              die Substratnutzung bei verschiedenen Belastungsstufen und zeigten, dass bei niedriger
+              Intensität (~25 % VO₂max) Fett die primäre Energiequelle ist, während bei hoher Intensität
+              (~85 % VO₂max) fast ausschließlich Kohlenhydrate verbrannt werden.
+            </p>
+
+            <p>
+              Im Rechner modellieren wir diese Beziehung als <strong>stückweise lineare Interpolation</strong>
+              mit 13 Datenpunkten:
+            </p>
+
+            <table class="article-table">
+              <thead>
+                <tr><th>Intensität (% Schwelle)</th><th>Carbs (%)</th><th>Fett (%)</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>40 %</td><td>35 %</td><td>65 %</td></tr>
+                <tr><td>50 %</td><td>42 %</td><td>58 %</td></tr>
+                <tr><td>60 %</td><td>52 %</td><td>48 %</td></tr>
+                <tr><td>70 %</td><td>62 %</td><td>38 %</td></tr>
+                <tr><td>75 %</td><td>68 %</td><td>32 %</td></tr>
+                <tr><td>80 %</td><td>75 %</td><td>25 %</td></tr>
+                <tr><td>85 %</td><td>82 %</td><td>18 %</td></tr>
+                <tr><td>90 %</td><td>87 %</td><td>13 %</td></tr>
+                <tr><td>95 %</td><td>91 %</td><td>9 %</td></tr>
+                <tr><td>100 %</td><td>94 %</td><td>6 %</td></tr>
+                <tr><td>110 %</td><td>96 %</td><td>4 %</td></tr>
+                <tr><td>120 %</td><td>97 %</td><td>3 %</td></tr>
+                <tr><td>130 %</td><td>98 %</td><td>2 %</td></tr>
+              </tbody>
+            </table>
+
+            <p>
+              Für Intensitätswerte zwischen den Stützstellen wird linear interpoliert. Beispiel:
+              Bei 72 % Schwellenintensität liegt der Carb-Anteil zwischen 62 % (70 %) und 68 % (75 %),
+              also bei 62 + (68 − 62) × (72 − 70) / (75 − 70) = <strong>64.4 %</strong>.
+            </p>
+          </section>
+
+          <!-- ===== 5. VO₂max-Anpassung ===== -->
+          <section id="vo2max" class="article-section">
+            <h2>5. Anpassung für Trainingszustand (VO₂max)</h2>
+
+            <p>
+              Gut trainierte Ausdauerathleten haben einen nach rechts verschobenen Crossover-Point –
+              sie können bei höheren Intensitäten noch anteilig mehr Fett verbrennen als weniger
+              trainierte Personen.<a href="#src-4" class="ref">[4]</a> Dies liegt an Adaptationen wie
+              erhöhter Mitochondriendichte, verbesserter Kapillarisierung und gesteigerter Aktivität
+              fettoxidierender Enzyme.
+            </p>
+
+            <p>
+              Wenn der VO₂max-Wert angegeben wird, passen wir die Substratverteilung an:
+            </p>
+
+            <div class="formula">Shift = (VO₂max − 50) × 0.003</div>
+            <div class="formula">Carb%<sub>adj</sub> = Carb%<sub>basis</sub> − Shift</div>
+            <div class="formula-legend">
+              <span><strong>50 ml/kg/min</strong> = Referenz-VO₂max (moderat trainiert)</span>
+              <span>Positiver Shift (VO₂max &gt; 50) → weniger Carbs, mehr Fett</span>
+              <span>Negativer Shift (VO₂max &lt; 50) → mehr Carbs, weniger Fett</span>
+            </div>
+
+            <div class="example">
+              <div class="example-title">Beispiel</div>
+              <p>Eliteläufer mit VO₂max 70 ml/kg/min</p>
+              <p>Shift = (70 − 50) × 0.003 = <strong>0.06 (−6 %)</strong></p>
+              <p>Bei einer Basis von 75 % Carb-Anteil → angepasst: <strong>69 %</strong></p>
+              <p>→ Mehr Energie aus Fett, weniger externes Maltodextrin benötigt.</p>
+            </div>
+
+            <p>
+              Zusätzlich berechnet der Rechner die tatsächliche <strong>%VO₂max</strong> der geplanten
+              Belastung. Wenn der berechnete Lauf-VO₂ den angegebenen VO₂max übersteigt, bedeutet dies,
+              dass die Pace nicht rein aerob leistbar ist – der Rechner zeigt dann eine Warnung an.
+            </p>
+
+            <div class="formula">%VO₂max = VO₂<sub>Lauf</sub> / VO₂max × 100</div>
+          </section>
+
+          <!-- ===== 6. Geschlecht ===== -->
+          <section id="gender" class="article-section">
+            <h2>6. Anpassung für Geschlecht</h2>
+
+            <p>
+              Zahlreiche Studien zeigen, dass Frauen bei gleicher relativer Belastungsintensität
+              proportional mehr Fett und weniger Kohlenhydrate oxidieren als Männer.<a href="#src-5" class="ref">[5]</a>
+              Dies wird auf hormonelle Unterschiede (insbesondere Östrogen) zurückgeführt, das die
+              Fettoxidation fördert und den Glykogenabbau verlangsamt.
+            </p>
+
+            <h3>Substratverteilung</h3>
+            <p>
+              Für weibliche Läuferinnen wird der Carb-Anteil um <strong>7 Prozentpunkte</strong> reduziert:
+            </p>
+
+            <div class="formula">Carb%<sub>weiblich</sub> = Carb%<sub>basis</sub> − 0.07</div>
+
+            <h3>Körperzusammensetzung</h3>
+            <p>
+              Frauen haben bei gleichem BMI typischerweise einen höheren Körperfettanteil und
+              damit weniger Muskelmasse. Dies beeinflusst die Glykogenspeicher-Schätzung.
+              Wir verwenden geschlechtsspezifische Lean-Mass-Ratios:
+            </p>
+
+            <table class="article-table">
+              <thead>
+                <tr><th>BMI</th><th>Lean-Mass-Ratio ♂</th><th>Lean-Mass-Ratio ♀</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>&lt; 20</td><td>0.88</td><td>0.82</td></tr>
+                <tr><td>20 – 25</td><td>0.82</td><td>0.75</td></tr>
+                <tr><td>25 – 30</td><td>0.75</td><td>0.68</td></tr>
+                <tr><td>&gt; 30</td><td>0.68</td><td>0.60</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- ===== 7. Glykogenspeicher ===== -->
+          <section id="glycogen" class="article-section">
+            <h2>7. Glykogenspeicher-Schätzung</h2>
+
+            <p>
+              Glykogen ist die primäre Kohlenhydratreserve des Körpers, gespeichert in der Skelettmuskulatur
+              und der Leber. Die Pionierstudien von Bergström &amp; Hultman (1966)<a href="#src-6" class="ref">[6]</a>
+              etablierten die Muskelbiopsie-Technik und zeigten, dass Glykogenvorräte ein limitierender
+              Faktor der Ausdauerleistung sind.
+            </p>
+
+            <p>Die Schätzung erfolgt in fünf Schritten:</p>
+
+            <h3>Schritt 1: BMI</h3>
+            <div class="formula">BMI = Gewicht / (Größe / 100)²</div>
+
+            <h3>Schritt 2: Lean Body Mass</h3>
+            <div class="formula">LBM = Gewicht × Lean-Mass-Ratio<sub>(BMI, Geschlecht)</sub></div>
+            <div class="formula-legend">
+              <span>Lean-Mass-Ratio aus der Tabelle in Abschnitt 6</span>
+            </div>
+
+            <h3>Schritt 3: Muskelmasse</h3>
+            <div class="formula">Muskelmasse = LBM × 0.48</div>
+            <div class="formula-legend">
+              <span>Ca. 45–50 % der fettfreien Masse ist Skelettmuskulatur</span>
+            </div>
+
+            <h3>Schritt 4: Gesamtglykogen</h3>
+            <div class="formula">Glykogen<sub>total</sub> = Muskelmasse × 15 g/kg + 90 g</div>
+            <div class="formula-legend">
+              <span><strong>15 g/kg</strong> = Muskelglykogengehalt bei gut gefüllten Speichern<a href="#src-7" class="ref">[7]</a></span>
+              <span><strong>90 g</strong> = Leberglykogen (nüchterner Wert: ~60–120 g)</span>
+            </div>
+
+            <h3>Schritt 5: Verfügbares Glykogen</h3>
+            <div class="formula">Glykogen<sub>verfügbar</sub> = Glykogen<sub>total</sub> × 0.75</div>
+            <div class="formula-legend">
+              <span><strong>75 %</strong> = Nutzbare Fraktion (nicht die gesamte Reserve wird mobilisiert)</span>
+              <span>Einige Muskeln sind beim Laufen weniger aktiv und behalten ihr Glykogen</span>
+              <span>Eine Restglykogenreserve bleibt immer erhalten (ca. 25 %)</span>
+            </div>
+
+            <div class="formula">kcal<sub>Glykogen</sub> = Glykogen<sub>verfügbar</sub> × 4 kcal/g</div>
+
+            <div class="example">
+              <div class="example-title">Beispiel: Mann, 180 cm, 75 kg</div>
+              <p>BMI = 75 / 3.24 = 23.1 → Lean-Ratio ♂ = 0.82</p>
+              <p>LBM = 75 × 0.82 = 61.5 kg</p>
+              <p>Muskelmasse = 61.5 × 0.48 = 29.5 kg</p>
+              <p>Glykogen total = 29.5 × 15 + 90 = <strong>533 g</strong></p>
+              <p>Verfügbar = 533 × 0.75 = 400 g → <strong>1598 kcal</strong></p>
+            </div>
+          </section>
+
+          <!-- ===== 8. Carb-Bedarf & Fueling-Richtlinien ===== -->
+          <section id="deficit" class="article-section">
+            <h2>8. Kohlenhydratbedarf &amp; Fueling-Richtlinien</h2>
+
+            <p>
+              Aus dem Gesamtkalorienverbrauch und der prozentualen Substratverteilung berechnen wir den
+              Kohlenhydratbedarf. Der Rechner ermittelt zwei Kriterien, um die optimale Zufuhr zu bestimmen:
+            </p>
+
+            <h3>Kriterium A: Physiologisches Glykogen-Defizit</h3>
+            <p>
+              Hierbei prüfen wir rechnerisch, ob die Kohlenhydratverbrennung die verfügbaren Glykogenspeicher übersteigt.
+            </p>
+            <div class="formula">Carb-kcal = Gesamt-kcal × Carb%</div>
+            <div class="formula">Defizit-kcal = max(0, Carb-kcal − Glykogen-kcal<sub>verfügbar</sub>)</div>
+            <div class="formula">Defizit-Menge (g) = Defizit-kcal / 4</div>
+
+            <h3>Kriterium B: Zeit- &amp; Intensitätsbasierte Richtlinien (Performance-Zufuhr)</h3>
+            <p>
+              In der Praxis empfiehlt die Sportwissenschaft (z.B. ACSM, ISSN), Kohlenhydrate bei Belastungen ab 60 Minuten zuzuführen, unabhängig davon, ob die Speicher am Ende rechnerisch leer sind. Dies erhält den Blutzuckerspiegel aufrecht, schont das Nervensystem und verkürzt die Regenerationszeit.
+            </p>
+            <table class="article-table">
+              <thead>
+                <tr><th>Laufdauer</th><th>Zone / Intensität</th><th>Zufuhrrate (g/h)</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>&lt; 60 min</td><td>Alle Intensitäten</td><td>0 g/h</td></tr>
+                <tr><td>60 – 90 min</td><td>Zone 1 &amp; 2 (Regeneration/Grundlage)</td><td>20 g/h</td></tr>
+                <tr><td>60 – 90 min</td><td>Zone 3, 4 &amp; 5 (Tempo/Schwelle)</td><td>30 g/h</td></tr>
+                <tr><td>90 – 150 min</td><td>Zone 1 &amp; 2 (Regeneration/Grundlage)</td><td>40 g/h</td></tr>
+                <tr><td>90 – 150 min</td><td>Zone 3, 4 &amp; 5 (Tempo/Schwelle)</td><td>60 g/h</td></tr>
+                <tr><td>&gt; 150 min</td><td>Zone 1 &amp; 2 (Regeneration/Grundlage)</td><td>50 g/h</td></tr>
+                <tr><td>&gt; 150 min</td><td>Zone 3, 4 &amp; 5 (Tempo/Schwelle)</td><td>80 g/h</td></tr>
+              </tbody>
+            </table>
+
+            <h3>Ermittlung der endgültigen Empfehlung</h3>
+            <p>
+              Der Rechner vergleicht die notwendige Zufuhrrate aus dem Glykogendefizit mit der empfohlenen Performance-Zufuhrrate und wählt das <strong>Maximum</strong> beider Werte, um sowohl Leistungseinbrüche als auch eine vollständige Erschöpfung der Speicher zu verhindern.
+            </p>
+          </section>
+
+          <!-- ===== 9. Osmolarität ===== -->
+          <section id="osmolarity" class="article-section">
+            <h2>9. Mischverhältnis &amp; Osmolarität</h2>
+
+            <p>
+              Maltodextrin ist ein Glucosepolymer (Dextrose-Äquivalent 15–20, durchschnittliches
+              Molekulargewicht ~900–1200 g/mol). Sein großer Vorteil gegenüber einfacher Glucose:
+              <strong>deutlich geringere Osmolarität</strong> bei gleichem Kohlenhydratgehalt, da ein
+              einzelnes Maltodextrinmolekül aus vielen Glucoseeinheiten besteht.<a href="#src-8" class="ref">[8]</a>
+            </p>
+
+            <h3>Konzentration</h3>
+            <p>
+              Für die optimale Balance zwischen Energiezufuhr und Magenentleerung empfehlen wir
+              eine Konzentration von <strong>80 g Maltodextrin pro Liter Wasser</strong> (8 % Lösung):
+            </p>
+
+            <div class="formula">Wasser (ml) = Maltodextrin (g) / 80 × 1000</div>
+
+            <table class="article-table">
+              <thead>
+                <tr><th>Konzentration</th><th>g pro Liter</th><th>Eigenschaft</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>4–6 %</td><td>40–60 g/L</td><td>Priorität Flüssigkeitsaufnahme</td></tr>
+                <tr><td>6–8 %</td><td>60–80 g/L</td><td>Balanciert (Standard)</td></tr>
+                <tr><td>8–10 %</td><td>80–100 g/L</td><td>Priorität Energiezufuhr</td></tr>
+                <tr><td>&gt; 10 %</td><td>&gt; 100 g/L</td><td>Verlangsamte Magenentleerung</td></tr>
+              </tbody>
+            </table>
+
+            <h3>Absorptionslimit</h3>
+            <p>
+              Maltodextrin wird im Darm zu Glucose abgebaut und über den <strong>SGLT1-Transporter</strong>
+              aufgenommen. Dieser Transporter hat eine maximale Kapazität von ca. <strong>60 g/h</strong>.<a href="#src-8" class="ref">[8]</a>
+            </p>
+
+            <p>
+              Wenn der berechnete Bedarf eine Aufnahmerate von &gt; 60 g/h erfordert, zeigt der Rechner
+              eine Warnung an. In diesem Fall kann ein <strong>Maltodextrin-Fructose-Gemisch (2:1 Ratio)</strong>
+              die Aufnahme auf bis zu 90–120 g/h steigern, da Fructose über einen separaten Transporter
+              (GLUT5) absorbiert wird.<a href="#src-9" class="ref">[9]</a>
+            </p>
+
+            <div class="callout">
+              💡 Der Rechner berechnet den <strong>theoretischen Gesamtbedarf</strong>. In der Praxis sollte
+              die Kohlenhydratzufuhr während des Laufs gleichmäßig verteilt werden – idealerweise beginnend
+              ab den ersten 30–45 Minuten. Nicht die gesamte Menge auf einmal konsumieren!
+            </div>
+          </section>
+
+          <!-- ===== 10. Quellen ===== -->
+          <section id="sources" class="article-section">
+            <h2>10. Quellenverzeichnis</h2>
+
+            <ol class="sources-list">
+              <li id="src-1">
+                American College of Sports Medicine (2021).
+                <em>ACSM's Guidelines for Exercise Testing and Prescription</em> (11th ed.).
+                Wolters Kluwer. — Metabolische Gleichung für das Laufen (S. 162–164).
+              </li>
+              <li id="src-2">
+                Brooks, G.A. &amp; Mercier, J. (1994).
+                Balance of carbohydrate and lipid utilization during exercise: the "crossover" concept.
+                <em>Journal of Applied Physiology</em>, 76(6), 2253–2261.
+              </li>
+              <li id="src-3">
+                Romijn, J.A., Coyle, E.F., Sidossis, L.S., et al. (1993).
+                Regulation of endogenous fat and carbohydrate metabolism in relation to exercise
+                intensity and duration.
+                <em>American Journal of Physiology</em>, 265(3), E380–E391.
+              </li>
+              <li id="src-4">
+                Jeukendrup, A.E. (2004).
+                Carbohydrate intake during exercise and performance.
+                <em>Nutrition</em>, 20(7-8), 669–677.
+              </li>
+              <li id="src-5">
+                Tarnopolsky, M.A. (2008).
+                Sex differences in exercise metabolism and the role of 17-beta estradiol.
+                <em>Medicine &amp; Science in Sports &amp; Exercise</em>, 40(7), 1209–1217.
+              </li>
+              <li id="src-6">
+                Bergström, J. &amp; Hultman, E. (1966).
+                Muscle glycogen synthesis after exercise: an enhancing factor localized to the
+                muscle cells in man.
+                <em>Nature</em>, 210(5033), 309–310.
+              </li>
+              <li id="src-7">
+                Gonzalez, J.T., Fuchs, C.J., Betts, J.A. &amp; van Loon, L.J.C. (2016).
+                Liver glycogen metabolism during and after prolonged endurance-type exercise.
+                <em>American Journal of Physiology – Endocrinology and Metabolism</em>, 311(3), E543–E553.
+              </li>
+              <li id="src-8">
+                Jeukendrup, A.E. (2010).
+                Carbohydrate and exercise performance: the role of multiple transportable carbohydrates.
+                <em>Current Opinion in Clinical Nutrition &amp; Metabolic Care</em>, 13(4), 452–457.
+              </li>
+              <li id="src-9">
+                Jeukendrup, A.E. &amp; Jentjens, R. (2000).
+                Oxidation of carbohydrate feedings during prolonged exercise: current thoughts, guidelines
+                and directions for future research.
+                <em>Sports Medicine</em>, 29(6), 407–424.
+              </li>
+            </ol>
+          </section>
+
+          <!-- Back to calculator -->
+          <a href="index.html" class="method-link">
+            ⚡ Zurück zum Rechner →
+          </a>
+
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <script src="nav.js"></script>
+</body>
+</html>
